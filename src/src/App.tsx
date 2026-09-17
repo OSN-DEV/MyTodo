@@ -14,36 +14,138 @@ function App() {
 
   return (
     <main className="container">
-      <h1 className="text-red-300">Welcome to Tauri + React</h1>
-
-      <div className="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
+      <ul>
+        <li className="flex items-center gap-3 w-full p-2 px-3 bg-white border-b border-gray-200">
+          <div className="shrink-0 cursor-grab text-gray-400 font-bold select-none">
+            ::
+          </div>
+          <div className="flex-1 min-w-0 line-clamp-2 leading-relaxed break-words">
+          あーでもない、こーでもない。いろいろなTodo
+          </div>
+          <div className="shrink-0 flex gap-2">
+            <button type="button" className="px-1 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded cursor-pointer">💮</button>
+          <button type="button" className="px-1 py-1 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded cursor-pointer">🚮</button>
+          <button type="button" className="px-1 py-1 text-sm bg-green-500 hover:bg-green-600 text-white rounded cursor-pointer">✐</button>
+          </div>
+        </li>
+        <li className="flex items-center gap-3 w-full p-2 px-3 bg-white border-b border-gray-200">
+          <div className="shrink-0 cursor-grab text-gray-400 font-bold select-none">
+            ::
+          </div>
+          <div className="flex-1 min-w-0 line-clamp-2 leading-relaxed break-words">
+          あーでもない、こーでもない。いろいろなTodo
+          </div>
+          <div className="shrink-0 flex gap-2">
+            <button type="button" className="px-1 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded cursor-pointer">💮</button>
+          <button type="button" className="px-1 py-1 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded cursor-pointer">🚮</button>
+          <button type="button" className="px-1 py-1 text-sm bg-green-500 hover:bg-green-600 text-white rounded cursor-pointer">✐</button>
+          </div>
+        </li>
+        <li className="flex items-center gap-3 w-full p-2 px-3 bg-white border-b border-gray-200">
+          <div className="shrink-0 cursor-grab text-gray-400 font-bold select-none">
+            ::
+          </div>
+          <div className="text-left flex-1 min-w-0 line-clamp-2 leading-relaxed break-words">
+          あーでもない、こーでもない。いろいろなTodo
+          </div>
+          <div className="shrink-0 flex gap-2">
+            <button type="button" className="px-1 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded cursor-pointer">💮</button>
+          <button type="button" className="px-1 py-1 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded cursor-pointer">🚮</button>
+          <button type="button" className="px-1 py-1 text-sm bg-green-500 hover:bg-green-600 text-white rounded cursor-pointer">✐</button>
+          </div>
+        </li>
+        <li className="flex items-center gap-3 w-full p-2 px-3 bg-white border-b border-gray-200">
+          <div className="shrink-0 cursor-grab text-gray-400 font-bold select-none">
+            ::
+          </div>
+          <div className="flex-1 min-w-0 line-clamp-2 leading-relaxed break-words">
+          あーでもない、こーでもない。いろいろなTodo
+          </div>
+          <div className="shrink-0 flex gap-2">
+            <button type="button" className="px-1 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded cursor-pointer">💮</button>
+          <button type="button" className="px-1 py-1 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded cursor-pointer">🚮</button>
+          <button type="button" className="px-1 py-1 text-sm bg-green-500 hover:bg-green-600 text-white rounded cursor-pointer">✐</button>
+          </div>
+        </li>
+        <li className="flex items-center gap-3 w-full p-2 px-3 bg-white border-b border-gray-200">
+          <div className="shrink-0 cursor-grab text-gray-400 font-bold select-none">
+            ::
+          </div>
+          <div className="flex-1 min-w-0 line-clamp-2 leading-relaxed break-words">
+          あーでもない、こーでもない。いろいろなTodo
+          </div>
+          <div className="shrink-0 flex gap-2">
+            <button type="button" className="px-1 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded cursor-pointer">💮</button>
+          <button type="button" className="px-1 py-1 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded cursor-pointer">🚮</button>
+          <button type="button" className="px-1 py-1 text-sm bg-green-500 hover:bg-green-600 text-white rounded cursor-pointer">✐</button>
+          </div>
+        </li>
+        <li className="flex items-center gap-3 w-full p-2 px-3 bg-white border-b border-gray-200">
+          <div className="shrink-0 cursor-grab text-gray-400 font-bold select-none">
+            ::
+          </div>
+          <div className="flex-1 min-w-0 line-clamp-2 leading-relaxed break-words">
+          あーでもない、こーでもない。いろいろなTodo
+          </div>
+          <div className="shrink-0 flex gap-2">
+            <button type="button" className="px-1 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded cursor-pointer">💮</button>
+          <button type="button" className="px-1 py-1 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded cursor-pointer">🚮</button>
+          <button type="button" className="px-1 py-1 text-sm bg-green-500 hover:bg-green-600 text-white rounded cursor-pointer">✐</button>
+          </div>
+        </li>
+        <li className="flex items-center gap-3 w-full p-2 px-3 bg-white border-b border-gray-200">
+          <div className="shrink-0 cursor-grab text-gray-400 font-bold select-none">
+            ::
+          </div>
+          <div className="flex-1 min-w-0 line-clamp-2 leading-relaxed break-words">
+          あーでもない、こーでもない。いろいろなTodo
+          </div>
+          <div className="shrink-0 flex gap-2">
+            <button type="button" className="px-1 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded cursor-pointer">💮</button>
+          <button type="button" className="px-1 py-1 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded cursor-pointer">🚮</button>
+          <button type="button" className="px-1 py-1 text-sm bg-green-500 hover:bg-green-600 text-white rounded cursor-pointer">✐</button>
+          </div>
+        </li>
+        <li className="flex items-center gap-3 w-full p-2 px-3 bg-white border-b border-gray-200">
+          <div className="shrink-0 cursor-grab text-gray-400 font-bold select-none">
+            ::
+          </div>
+          <div className="flex-1 min-w-0 line-clamp-2 leading-relaxed break-words">
+          あーでもない、こーでもない。いろいろなTodo
+          </div>
+          <div className="shrink-0 flex gap-2">
+            <button type="button" className="px-1 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded cursor-pointer">💮</button>
+          <button type="button" className="px-1 py-1 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded cursor-pointer">🚮</button>
+          <button type="button" className="px-1 py-1 text-sm bg-green-500 hover:bg-green-600 text-white rounded cursor-pointer">✐</button>
+          </div>
+        </li>
+        <li className="flex items-center gap-3 w-full p-2 px-3 bg-white border-b border-gray-200">
+          <div className="shrink-0 cursor-grab text-gray-400 font-bold select-none">
+            ::
+          </div>
+          <div className="flex-1 min-w-0 line-clamp-2 leading-relaxed break-words">
+          あーでもない、こーでもない。いろいろなTodo
+          </div>
+          <div className="shrink-0 flex gap-2">
+            <button type="button" className="px-1 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded cursor-pointer">💮</button>
+          <button type="button" className="px-1 py-1 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded cursor-pointer">🚮</button>
+          <button type="button" className="px-1 py-1 text-sm bg-green-500 hover:bg-green-600 text-white rounded cursor-pointer">✐</button>
+          </div>
+        </li>
+        <li className="flex items-center gap-3 w-full p-2 px-3 bg-white border-b border-gray-200">
+          <div className="shrink-0 cursor-grab text-gray-400 font-bold select-none">
+            ::
+          </div>
+          <div className="flex-1 min-w-0 line-clamp-2 leading-relaxed break-words">
+          あーでもない、こーでもない。いろいろなTodo
+          </div>
+          <div className="shrink-0 flex gap-2">
+            <button type="button" className="px-1 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded cursor-pointer">💮</button>
+          <button type="button" className="px-1 py-1 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded cursor-pointer">🚮</button>
+          <button type="button" className="px-1 py-1 text-sm bg-green-500 hover:bg-green-600 text-white rounded cursor-pointer">✐</button>
+          </div>
+        </li>
+      </ul>
     </main>
   );
 }
