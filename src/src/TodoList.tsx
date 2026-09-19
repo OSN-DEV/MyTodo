@@ -146,6 +146,19 @@ function App() {
     setGrabEnabledIndex(null);
   }
 
+  // 画面端からこの距離(px)以内にポインタが入ったらオートスクロールする。
+  const AUTO_SCROLL_EDGE = 80;
+  // オートスクロール1回（dragoverイベント1回分）あたりのスクロール量(px)。
+  const AUTO_SCROLL_SPEED = 20;
+  // dragoverはポインタ静止中も継続発火するため、この呼び出しだけで連続スクロールになる。
+  const autoScrollIfNearEdge = (clientY: number) => {
+    if (clientY < AUTO_SCROLL_EDGE) {
+      window.scrollBy(0, -AUTO_SCROLL_SPEED);
+    } else if (clientY > window.innerHeight - AUTO_SCROLL_EDGE) {
+      window.scrollBy(0, AUTO_SCROLL_SPEED);
+    }
+  }
+
   // ドラッグ開始位置を記録する。この時点ではtodoItemsは一切変更しない。
   const handleDragStart = (event: React.DragEvent, index: number) => {
     setDraggedIndex(index);
@@ -153,6 +166,7 @@ function App() {
   // ホバー位置を更新するだけ（見た目はdisplayItemsのプレビューに反映）。preventDefaultはドロップ発火に必須。
   const handleDragOver = (event: React.DragEvent, targetIndex: number) => {
     event.preventDefault();
+    autoScrollIfNearEdge(event.clientY);
 
     if (draggedIndex === null || draggedIndex === targetIndex) {
       return;
