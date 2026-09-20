@@ -5,111 +5,109 @@ import "./TodoList.css";
 function App() {
   const [greetMsg, setGreetMsg] = useState("");
   const [name, setName] = useState("");
- 
-  const [todoItems, setTodoItems] = useState<TodoItem[]>(
-    [
-      {
-        id: 1,
-        todo: "あーでもない、こーでもない。いろいろなTodo (id: 1)",
-        priority: "low",
-        memo: "",
-        order: 1,
-        completedAt: null,
-        createdAt: 1234,
-        modifiedAt: 1234
-      },
-      {
-        id: 2,
-        todo: "あーでもない、こーでもない。いろいろなTodo (id: 2)",
-        priority: "low",
-        memo: "",
-        order: 1,
-        completedAt: null,
-        createdAt: 1234,
-        modifiedAt: 1234
-      },
-      {
-        id: 3,
-        todo: "あーでもない、こーでもない。いろいろなTodo (id: 3)",
-        priority: "low",
-        memo: "",
-        order: 1,
-        completedAt: null,
-        createdAt: 1234,
-        modifiedAt: 1234
-      },
-      {
-        id: 4,
-        todo: "あーでもない、こーでもない。いろいろなTodo (id: 4)",
-        priority: "low",
-        memo: "",
-        order: 1,
-        completedAt: null,
-        createdAt: 1234,
-        modifiedAt: 1234
-      },
-      {
-        id: 5,
-        todo: "あーでもない、こーでもない。いろいろなTodo (id: 5)",
-        priority: "low",
-        memo: "",
-        order: 1,
-        completedAt: null,
-        createdAt: 1234,
-        modifiedAt: 1234
-      },
-      {
-        id: 6,
-        todo: "あーでもない、こーでもない。いろいろなTodo (id: 6)",
-        priority: "low",
-        memo: "",
-        order: 1,
-        completedAt: null,
-        createdAt: 1234,
-        modifiedAt: 1234
-      },
-      {
-        id: 7,
-        todo: "あーでもない、こーでもない。いろいろなTodo (id: 7)",
-        priority: "low",
-        memo: "",
-        order: 1,
-        completedAt: null,
-        createdAt: 1234,
-        modifiedAt: 1234
-      },
-      {
-        id: 8,
-        todo: "あーでもない、こーでもない。いろいろなTodo (id: 8)",
-        priority: "low",
-        memo: "",
-        order: 1,
-        completedAt: null,
-        createdAt: 1234,
-        modifiedAt: 1234
-      },
-      {
-        id: 9,
-        todo: "あーでもない、こーでもない。いろいろなTodo (id: 9)",
-        priority: "low",
-        memo: "",
-        order: 1,
-        completedAt: null,
-        createdAt: 1234,
-        modifiedAt: 1234
-      },
-      {
-        id: 10,
-        todo: "あーでもない、こーでもない。いろいろなTodo (id: 10)",
-        priority: "low",
-        memo: "",
-        order: 1,
-        completedAt: null,
-        createdAt: 1234,
-        modifiedAt: 1234
-      },
-    ]
-  )
+
+  const [todoItems, setTodoItems] = useState<TodoItem[]>([
+    {
+      id: 1,
+      todo: "あーでもない、こーでもない。いろいろなTodo (id: 1)",
+      priority: "low",
+      memo: "",
+      order: 1,
+      completedAt: null,
+      createdAt: 1234,
+      modifiedAt: 1234,
+    },
+    {
+      id: 2,
+      todo: "あーでもない、こーでもない。いろいろなTodo (id: 2)",
+      priority: "low",
+      memo: "",
+      order: 1,
+      completedAt: null,
+      createdAt: 1234,
+      modifiedAt: 1234,
+    },
+    {
+      id: 3,
+      todo: "あーでもない、こーでもない。いろいろなTodo (id: 3)",
+      priority: "low",
+      memo: "",
+      order: 1,
+      completedAt: null,
+      createdAt: 1234,
+      modifiedAt: 1234,
+    },
+    {
+      id: 4,
+      todo: "あーでもない、こーでもない。いろいろなTodo (id: 4)",
+      priority: "low",
+      memo: "",
+      order: 1,
+      completedAt: null,
+      createdAt: 1234,
+      modifiedAt: 1234,
+    },
+    {
+      id: 5,
+      todo: "あーでもない、こーでもない。いろいろなTodo (id: 5)",
+      priority: "low",
+      memo: "",
+      order: 1,
+      completedAt: null,
+      createdAt: 1234,
+      modifiedAt: 1234,
+    },
+    {
+      id: 6,
+      todo: "あーでもない、こーでもない。いろいろなTodo (id: 6)",
+      priority: "low",
+      memo: "",
+      order: 1,
+      completedAt: null,
+      createdAt: 1234,
+      modifiedAt: 1234,
+    },
+    {
+      id: 7,
+      todo: "あーでもない、こーでもない。いろいろなTodo (id: 7)",
+      priority: "low",
+      memo: "",
+      order: 1,
+      completedAt: null,
+      createdAt: 1234,
+      modifiedAt: 1234,
+    },
+    {
+      id: 8,
+      todo: "あーでもない、こーでもない。いろいろなTodo (id: 8)",
+      priority: "low",
+      memo: "",
+      order: 1,
+      completedAt: null,
+      createdAt: 1234,
+      modifiedAt: 1234,
+    },
+    {
+      id: 9,
+      todo: "あーでもない、こーでもない。いろいろなTodo (id: 9)",
+      priority: "low",
+      memo: "",
+      order: 1,
+      completedAt: null,
+      createdAt: 1234,
+      modifiedAt: 1234,
+    },
+    {
+      id: 10,
+      todo: "あーでもない、こーでもない。いろいろなTodo (id: 10)",
+      priority: "low",
+      memo: "",
+      order: 1,
+      completedAt: null,
+      createdAt: 1234,
+      modifiedAt: 1234,
+    },
+  ]);
 
   async function greet() {
     // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -118,10 +116,11 @@ function App() {
 
   // １行分の情報をドラッグするのでdraggableはliタグに対して設定する必要がある。
   // ただしドラック開始はノブをクリックしたときに限定したいので、ノブのクリック時にドラッグを許可する。
-  const [grabEnabledIndex, setGrabEnabledIndex] = useState<number | null>(null);
+  const [grabbedIndex, setGrabbedIndex] = useState<number | null>(null);
   // ドラッグ中の元インデックスとプレビュー先インデックス。todoItems自体はドロップ時まで変更しない。
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-  const [overIndex, setOverIndex] = useState<number | null>(null);
+  const [dragSrcIndex, setDragSrcIndex] = useState<number | null>(null);
+  // const [overIndex, setOverIndex] = useState<number | null>(null);
+  const [dragDestIndex, setDragDestIndex] = useState<number | null>(null);
 
   // fromの要素をtoの位置へ移動した新しい配列を返す（todoItems自体は変更しない）。
   const reorder = (from: number, to: number) => {
@@ -129,22 +128,26 @@ function App() {
     const [draggedItem] = updated.splice(from, 1);
     updated.splice(to, 0, draggedItem);
     return updated;
-  }
+  };
 
   // ドラッグ中の見た目だけの並び替え。実データはドロップ時まで確定しない。
   const displayItems = useMemo(() => {
-    if (draggedIndex === null || overIndex === null || draggedIndex === overIndex) {
+    if (
+      dragSrcIndex === null ||
+      dragDestIndex === null ||
+      dragSrcIndex === dragDestIndex
+    ) {
       return todoItems;
     }
-    return reorder(draggedIndex, overIndex);
-  }, [todoItems, draggedIndex, overIndex]);
+    return reorder(dragSrcIndex, dragDestIndex);
+  }, [todoItems, dragSrcIndex, dragDestIndex]);
 
   // ドラッグ関連のstateを一括で初期状態に戻す（確定・キャンセルどちらの後始末にも使う）。
   const resetDragState = () => {
-    setDraggedIndex(null);
-    setOverIndex(null);
-    setGrabEnabledIndex(null);
-  }
+    setDragSrcIndex(null);
+    setDragDestIndex(null);
+    setGrabbedIndex(null);
+  };
 
   // 画面端からこの距離(px)以内にポインタが入ったらオートスクロールする。
   const AUTO_SCROLL_EDGE = 80;
@@ -157,75 +160,91 @@ function App() {
     } else if (clientY > window.innerHeight - AUTO_SCROLL_EDGE) {
       window.scrollBy(0, AUTO_SCROLL_SPEED);
     }
-  }
+  };
 
   // ドラッグ開始位置を記録する。この時点ではtodoItemsは一切変更しない。
   const handleDragStart = (event: React.DragEvent, index: number) => {
-    setDraggedIndex(index);
-  }
+    setDragSrcIndex(index);
+  };
   // ホバー位置を更新するだけ（見た目はdisplayItemsのプレビューに反映）。preventDefaultはドロップ発火に必須。
   const handleDragOver = (event: React.DragEvent, targetIndex: number) => {
     event.preventDefault();
     autoScrollIfNearEdge(event.clientY);
 
-    if (draggedIndex === null || draggedIndex === targetIndex) {
+    if (dragSrcIndex === null || dragSrcIndex === targetIndex) {
       return;
     }
 
-    setOverIndex(targetIndex);
-  }
+    setDragDestIndex(targetIndex);
+  };
   // 並び順を確定する唯一の箇所。ここでtodoItemsを更新し、orderを振り直す。
   const handleDrop = (event: React.DragEvent, targetIndex: number) => {
     event.preventDefault();
 
-    if (draggedIndex === null || draggedIndex === targetIndex) {
+    if (dragSrcIndex === null || dragSrcIndex === targetIndex) {
       resetDragState();
       return;
     }
 
-    const updated = reorder(draggedIndex, targetIndex).map((item, index) => ({
+    const updated = reorder(dragSrcIndex, targetIndex).map((item, index) => ({
       ...item,
       order: index + 1,
     }));
     setTodoItems(updated);
     resetDragState();
-  }
+  };
   const handleDragEnd = (event: React.DragEvent, index: number) => {
     // onDropが発火しなかった場合（画面外へのドロップ等）はtodoItemsが未変更のため元の順序に戻る。
     resetDragState();
-  }
+  };
 
   return (
     <main className="container">
       <ul id="todo-list">
         {displayItems.map((todo, index) => (
-          <li 
-          
-          key={todo.id} className="flex items-center gap-3 w-full p-2 px-3 bg-white border-b border-gray-200"
-          draggable={
-            grabEnabledIndex === index //
-          }
-          onDragStart={(e) => handleDragStart(e, index)}
-          onDragOver={(e) => handleDragOver(e, index)}
-          onDrop={(e) => handleDrop(e, index)}
-          onDragEnd={(e) => handleDragEnd(e, index)}
+          <li
+            key={todo.id}
+            className="flex items-center gap-3 w-full p-2 px-3 bg-white border-b border-gray-200"
+            draggable={
+              grabbedIndex === index //
+            }
+            onDragStart={(e) => handleDragStart(e, index)}
+            onDragOver={(e) => handleDragOver(e, index)}
+            onDrop={(e) => handleDrop(e, index)}
+            onDragEnd={(e) => handleDragEnd(e, index)}
           >
-            <div className="shrink-0 cursor-grab text-gray-400 font-bold select-none"
-              onMouseDown={() => setGrabEnabledIndex(index)}
-              onMouseUp={() => setGrabEnabledIndex(null)}>
+            <div
+              className="shrink-0 cursor-grab text-gray-400 font-bold select-none"
+              onMouseDown={() => setGrabbedIndex(index)}
+              onMouseUp={() => setGrabbedIndex(null)}
+            >
               ::
             </div>
-            <div  className="text-left flex-1 min-w-0 line-clamp-2 leading-relaxed break-words">
-            {todo.todo}
+            <div className="text-left flex-1 min-w-0 line-clamp-2 leading-relaxed break-words">
+              {todo.todo}
             </div>
             <div className="shrink-0 flex gap-2">
-              <button type="button" className="px-1 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded cursor-pointer">💮</button>
-            <button type="button" className="px-1 py-1 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded cursor-pointer">🚮</button>
-            <button type="button" className="px-1 py-1 text-sm bg-green-500 hover:bg-green-600 text-white rounded cursor-pointer">✐</button>
+              <button
+                type="button"
+                className="px-1 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded cursor-pointer"
+              >
+                💮
+              </button>
+              <button
+                type="button"
+                className="px-1 py-1 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded cursor-pointer"
+              >
+                🚮
+              </button>
+              <button
+                type="button"
+                className="px-1 py-1 text-sm bg-green-500 hover:bg-green-600 text-white rounded cursor-pointer"
+              >
+                ✐
+              </button>
             </div>
           </li>
         ))}
-
       </ul>
     </main>
   );
