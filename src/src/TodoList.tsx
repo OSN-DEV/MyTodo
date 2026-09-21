@@ -1,113 +1,16 @@
 import { useMemo, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import "./TodoList.css";
-
+// import "./TodoList.css";
+import "./component/TodoList/style.css"
+import { getDummyData } from "./component/TodoList/stub";
+import { EmojiButton } from "./component/TodoList/EmojiButton";
+        
 function App() {
   const [greetMsg, setGreetMsg] = useState("");
   const [name, setName] = useState("");
 
-  const [todoItems, setTodoItems] = useState<TodoItem[]>([
-    {
-      id: 1,
-      todo: "あーでもない、こーでもない。いろいろなTodo (id: 1)",
-      priority: "low",
-      memo: "",
-      order: 1,
-      completedAt: null,
-      createdAt: 1234,
-      modifiedAt: 1234,
-    },
-    {
-      id: 2,
-      todo: "あーでもない、こーでもない。いろいろなTodo (id: 2)",
-      priority: "low",
-      memo: "",
-      order: 1,
-      completedAt: null,
-      createdAt: 1234,
-      modifiedAt: 1234,
-    },
-    {
-      id: 3,
-      todo: "あーでもない、こーでもない。いろいろなTodo (id: 3)",
-      priority: "low",
-      memo: "",
-      order: 1,
-      completedAt: null,
-      createdAt: 1234,
-      modifiedAt: 1234,
-    },
-    {
-      id: 4,
-      todo: "あーでもない、こーでもない。いろいろなTodo (id: 4)",
-      priority: "low",
-      memo: "",
-      order: 1,
-      completedAt: null,
-      createdAt: 1234,
-      modifiedAt: 1234,
-    },
-    {
-      id: 5,
-      todo: "あーでもない、こーでもない。いろいろなTodo (id: 5)",
-      priority: "low",
-      memo: "",
-      order: 1,
-      completedAt: null,
-      createdAt: 1234,
-      modifiedAt: 1234,
-    },
-    {
-      id: 6,
-      todo: "あーでもない、こーでもない。いろいろなTodo (id: 6)",
-      priority: "low",
-      memo: "",
-      order: 1,
-      completedAt: null,
-      createdAt: 1234,
-      modifiedAt: 1234,
-    },
-    {
-      id: 7,
-      todo: "あーでもない、こーでもない。いろいろなTodo (id: 7)",
-      priority: "low",
-      memo: "",
-      order: 1,
-      completedAt: null,
-      createdAt: 1234,
-      modifiedAt: 1234,
-    },
-    {
-      id: 8,
-      todo: "あーでもない、こーでもない。いろいろなTodo (id: 8)",
-      priority: "low",
-      memo: "",
-      order: 1,
-      completedAt: null,
-      createdAt: 1234,
-      modifiedAt: 1234,
-    },
-    {
-      id: 9,
-      todo: "あーでもない、こーでもない。いろいろなTodo (id: 9)",
-      priority: "low",
-      memo: "",
-      order: 1,
-      completedAt: null,
-      createdAt: 1234,
-      modifiedAt: 1234,
-    },
-    {
-      id: 10,
-      todo: "あーでもない、こーでもない。いろいろなTodo (id: 10)",
-      priority: "low",
-      memo: "",
-      order: 1,
-      completedAt: null,
-      createdAt: 1234,
-      modifiedAt: 1234,
-    },
-  ]);
+
+   const [todoItems, setTodoItems] = useState<TodoItem[]>(getDummyData());
 
   async function greet() {
     // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -119,9 +22,11 @@ function App() {
   const [grabbedIndex, setGrabbedIndex] = useState<number | null>(null);
   // ドラッグ中の元インデックスとプレビュー先インデックス。todoItems自体はドロップ時まで変更しない。
   const [dragSrcIndex, setDragSrcIndex] = useState<number | null>(null);
-  // const [overIndex, setOverIndex] = useState<number | null>(null);
   const [dragDestIndex, setDragDestIndex] = useState<number | null>(null);
 
+  // =====================================================================================
+  // リスト並べ替え関連
+  // =====================================================================================
   // fromの要素をtoの位置へ移動した新しい配列を返す（todoItems自体は変更しない）。
   const reorder = (from: number, to: number) => {
     const updated = [...todoItems];
@@ -198,8 +103,24 @@ function App() {
     resetDragState();
   };
 
-  return (
-    <main className="container">
+
+
+  // =====================================================================================
+  // ボタンイベント
+  // =====================================================================================
+  const handleDeleteClick = (index: number) => {
+  }
+  const handleDoneClick = (index: number) => {
+  }
+  const handleEditClick = (index: number) => {
+  }
+
+
+  // =====================================================================================
+  // メインコンテンツ
+  // =====================================================================================
+  const getMainContents = ():React.JSX.Element => {
+    return (    <main className="container">
       <ul id="todo-list">
         {displayItems.map((todo, index) => (
           <li
@@ -224,30 +145,32 @@ function App() {
               {todo.todo}
             </div>
             <div className="shrink-0 flex gap-2">
-              <button
-                type="button"
-                className="px-1 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded cursor-pointer"
-              >
-                💮
-              </button>
-              <button
-                type="button"
-                className="px-1 py-1 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded cursor-pointer"
-              >
-                🚮
-              </button>
-              <button
-                type="button"
-                className="px-1 py-1 text-sm bg-green-500 hover:bg-green-600 text-white rounded cursor-pointer"
-              >
-                ✐
-              </button>
+              <EmojiButton
+                onClick={() => handleDoneClick(index)}
+                buttonText="✅"
+              />
+              <EmojiButton
+                onClick={() => handleEditClick(index)}
+                buttonText="✏️"
+              />
+              <EmojiButton
+                onClick={() => handleDeleteClick(index)}
+                buttonText="❌"
+              />
             </div>
           </li>
         ))}
       </ul>
-    </main>
+    </main>)
+  }
+
+  return (
+    <>
+      { getMainContents()}
+    </>
   );
+
+
 }
 
 export default App;

@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-.logo.vite:hover {
+/* .logo.vite:hover {
   filter: drop-shadow(0 0 2em #747bff);
 }
 
@@ -60,9 +60,9 @@ a:hover {
 
 h1 {
   text-align: center;
-}
+} */
 
-input,
+/* input,
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -115,4 +115,4 @@ button {
   button:active {
     background-color: #0f0f0f69;
   }
-}
+} */
