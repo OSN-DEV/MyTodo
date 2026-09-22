@@ -1,107 +1,18 @@
 
-export const getDummyData = ():TodoItem[] => {
-    return (  
-    [
-        {
-          id: 1,
-          todo: "あーでもない、こーでもない。いろいろなTodo (id: 1)",
-          priority: "low",
-          memo: "",
-          order: 1,
-          completedAt: null,
-          createdAt: 1234,
-          modifiedAt: 1234,
-        },
-        {
-          id: 2,
-          todo: "あーでもない、こーでもない。いろいろなTodo (id: 2)",
-          priority: "low",
-          memo: "",
-          order: 1,
-          completedAt: null,
-          createdAt: 1234,
-          modifiedAt: 1234,
-        },
-        {
-          id: 3,
-          todo: "あーでもない、こーでもない。いろいろなTodo (id: 3)",
-          priority: "low",
-          memo: "",
-          order: 1,
-          completedAt: null,
-          createdAt: 1234,
-          modifiedAt: 1234,
-        },
-        {
-          id: 4,
-          todo: "あーでもない、こーでもない。いろいろなTodo (id: 4)",
-          priority: "low",
-          memo: "",
-          order: 1,
-          completedAt: null,
-          createdAt: 1234,
-          modifiedAt: 1234,
-        },
-        {
-          id: 5,
-          todo: "あーでもない、こーでもない。いろいろなTodo (id: 5)",
-          priority: "low",
-          memo: "",
-          order: 1,
-          completedAt: null,
-          createdAt: 1234,
-          modifiedAt: 1234,
-        },
-        {
-          id: 6,
-          todo: "あーでもない、こーでもない。いろいろなTodo (id: 6)",
-          priority: "low",
-          memo: "",
-          order: 1,
-          completedAt: null,
-          createdAt: 1234,
-          modifiedAt: 1234,
-        },
-        {
-          id: 7,
-          todo: "あーでもない、こーでもない。いろいろなTodo (id: 7)",
-          priority: "low",
-          memo: "",
-          order: 1,
-          completedAt: null,
-          createdAt: 1234,
-          modifiedAt: 1234,
-        },
-        {
-          id: 8,
-          todo: "あーでもない、こーでもない。いろいろなTodo (id: 8)",
-          priority: "low",
-          memo: "",
-          order: 1,
-          completedAt: null,
-          createdAt: 1234,
-          modifiedAt: 1234,
-        },
-        {
-          id: 9,
-          todo: "あーでもない、こーでもない。いろいろなTodo (id: 9)",
-          priority: "low",
-          memo: "",
-          order: 1,
-          completedAt: null,
-          createdAt: 1234,
-          modifiedAt: 1234,
-        },
-        {
-          id: 10,
-          todo: "あーでもない、こーでもない。いろいろなTodo (id: 10)",
-          priority: "low",
-          memo: "",
-          order: 1,
-          completedAt: null,
-          createdAt: 1234,
-          modifiedAt: 1234,
-        },
-      ]);
-}
+export const getDummyData = (): TodoItem[] => {
+  return Array.from({ length: 10 }, (_, i) => {
+    const id = i + 1;
+    return {
+      id,
+      todo: `あーでもない、こーでもない。いろいろなTodo (id: ${id})`,
+      importance: "low",
+      memo: "",
+      limitDate: null,
+      order: 1,
+      completedAt: null,
+      createdAt: 1234,
+      modifiedAt: 1234,
+    };
+  });
+};
 

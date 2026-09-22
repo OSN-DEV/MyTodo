@@ -1,16 +1,20 @@
 import { useMemo, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 // import "./TodoList.css";
-import "./component/TodoList/style.css"
+import "./component/TodoList/style.css";
 import { getDummyData } from "./component/TodoList/stub";
 import { EmojiButton } from "./component/TodoList/EmojiButton";
-        
+import { TodoFormDialog } from "./component/TodoList/TodoFormDialog";
+import type { TodoFormInput } from "./component/TodoList/TodoFormDialog";
+
+// 追加ダイアログか、対象idを持つ編集ダイアログか。未表示の場合はnull。
+type DialogState = { mode: "add" } | { mode: "edit"; id: number } | null;
+
 function App() {
   const [greetMsg, setGreetMsg] = useState("");
   const [name, setName] = useState("");
 
-
-   const [todoItems, setTodoItems] = useState<TodoItem[]>(getDummyData());
+  const [todoItems, setTodoItems] = useState<TodoItem[]>(getDummyData());
 
   async function greet() {
     // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -103,74 +107,145 @@ function App() {
     resetDragState();
   };
 
-
-
   // =====================================================================================
   // ボタンイベント
   // =====================================================================================
-  const handleDeleteClick = (index: number) => {
-  }
-  const handleDoneClick = (index: number) => {
-  }
-  const handleEditClick = (index: number) => {
-  }
+  const [dialog, setDialog] = useState<DialogState>(null);
+  // 編集対象は都度idからtodoItemsを検索する（並べ替え後もインデックスに依存しないため）。
+  const dialogInitial =
+    dialog?.mode === "edit"
+      ? todoItems.find((item) => item.id === dialog.id) ?? null
+      : null;
 
+  const handleDeleteClick = (id: number) => {
+    // if (!window.confirm("このTodoを削除しますか？")) {
+    //   return;
+    // }
+    setTodoItems(todoItems.filter((item) => item.id !== id));
+    setDialog(null);
+  };
+  const handleDoneClick = (id: number) => {
+    setTodoItems(
+      todoItems.map((item) =>
+        item.id === id
+          ? { ...item, completedAt: item.completedAt === null ? Date.now() : null }
+          : item
+      )
+    );
+  };
+  const handleEditClick = (id: number) => {
+    setDialog({ mode: "edit", id });
+  };
+  const handleAddClick = () => {
+    setDialog({ mode: "add" });
+  };
+  const handleDialogCancel = () => {
+    setDialog(null);
+  };
+  const handleDialogSubmit = (input: TodoFormInput) => {
+    if (dialog?.mode === "edit") {
+      const targetId = dialog.id;
+      setTodoItems(
+        todoItems.map((item) =>
+          item.id === targetId
+            ? {
+                ...item,
+                todo: input.todo,
+                importance: input.importance,
+                limitDate: input.limitDate,
+                completedAt: input.isDone ? item.completedAt ?? Date.now() : null,
+                modifiedAt: Date.now(),
+              }
+            : item
+        )
+      );
+    } else {
+      const newItem: TodoItem = {
+        id: Date.now(),
+        todo: input.todo,
+        importance: input.importance,
+        memo: "",
+        limitDate: input.limitDate,
+        order: todoItems.length + 1,
+        completedAt: input.isDone ? Date.now() : null,
+        createdAt: Date.now(),
+        modifiedAt: Date.now(),
+      };
+      setTodoItems([...todoItems, newItem]);
+    }
+    setDialog(null);
+  };
 
   // =====================================================================================
   // メインコンテンツ
   // =====================================================================================
-  const getMainContents = ():React.JSX.Element => {
-    return (    <main className="container">
-      <ul id="todo-list">
-        {displayItems.map((todo, index) => (
-          <li
-            key={todo.id}
-            className="flex items-center gap-3 w-full p-2 px-3 bg-white border-b border-gray-200"
-            draggable={
-              grabbedIndex === index //
-            }
-            onDragStart={(e) => handleDragStart(e, index)}
-            onDragOver={(e) => handleDragOver(e, index)}
-            onDrop={(e) => handleDrop(e, index)}
-            onDragEnd={(e) => handleDragEnd(e, index)}
-          >
-            <div
-              className="shrink-0 cursor-grab text-gray-400 font-bold select-none"
-              onMouseDown={() => setGrabbedIndex(index)}
-              onMouseUp={() => setGrabbedIndex(null)}
+  const getMainContents = (): React.JSX.Element => {
+    return (
+      <main className="container">
+        <ul id="todo-list">
+          {displayItems.map((todo, index) => (
+            <li
+              key={todo.id}
+              className="flex items-center gap-3 w-full p-2 px-3 bg-white border-b border-gray-200"
+              draggable={
+                grabbedIndex === index //
+              }
+              onDragStart={(e) => handleDragStart(e, index)}
+              onDragOver={(e) => handleDragOver(e, index)}
+              onDrop={(e) => handleDrop(e, index)}
+              onDragEnd={(e) => handleDragEnd(e, index)}
             >
-              ::
-            </div>
-            <div className="text-left flex-1 min-w-0 line-clamp-2 leading-relaxed break-words">
-              {todo.todo}
-            </div>
-            <div className="shrink-0 flex gap-2">
-              <EmojiButton
-                onClick={() => handleDoneClick(index)}
-                buttonText="✅"
-              />
-              <EmojiButton
-                onClick={() => handleEditClick(index)}
-                buttonText="✏️"
-              />
-              <EmojiButton
-                onClick={() => handleDeleteClick(index)}
-                buttonText="❌"
-              />
-            </div>
-          </li>
-        ))}
-      </ul>
-    </main>)
-  }
+              <div
+                className="shrink-0 cursor-grab text-gray-400 font-bold select-none"
+                onMouseDown={() => setGrabbedIndex(index)}
+                onMouseUp={() => setGrabbedIndex(null)}
+              >
+                ::
+              </div>
+              <div className="text-left flex-1 min-w-0 line-clamp-2 leading-relaxed break-words">
+                {todo.todo}
+              </div>
+              <div className="shrink-0 flex gap-2">
+                <EmojiButton
+                  onClick={() => handleDoneClick(todo.id)}
+                  buttonText="✅"
+                />
+                <EmojiButton
+                  onClick={() => handleEditClick(todo.id)}
+                  buttonText="✏️"
+                />
+                <EmojiButton
+                  onClick={() => handleDeleteClick(todo.id)}
+                  buttonText="❌"
+                />
+              </div>
+            </li>
+          ))}
+        </ul>
+        <button
+          type="button"
+          onClick={handleAddClick}
+          className="add-todo"
+        >
+          +
+        </button>
+        {dialog && (
+          <TodoFormDialog
+            initial={dialogInitial}
+            onCancel={handleDialogCancel}
+            onSubmit={handleDialogSubmit}
+            onDelete={
+              dialog.mode === "edit"
+                ? () => handleDeleteClick(dialog.id)
+                : undefined
+            }
+          />
+        )}
+      </main>
+    );
+  };
 
-  return (
-    <>
-      { getMainContents()}
-    </>
-  );
-
-
+  return <>{getMainContents()}</>;
 }
 
 export default App;

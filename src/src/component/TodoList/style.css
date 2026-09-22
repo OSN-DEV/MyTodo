@@ -1,5 +1,23 @@
 @import "tailwindcss";
 
+@utility add-todo {
+    @apply fixed 
+    bottom-3
+    right-3
+    w-8
+    h-8
+    rounded-full
+    bg-blue-500
+    hover:bg-blue-600
+    text-white
+    text-2xl
+    shadow-lg
+    cursor-pointer;
+}
+
+
+
+
 /* .logo.vite:hover {
   filter: drop-shadow(0 0 2em #747bff);
 }
