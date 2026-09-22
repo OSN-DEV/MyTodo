@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
 // import "./TodoList.css";
 import "./component/TodoList/style.css";
 import { getDummyData } from "./component/TodoList/stub";
@@ -15,6 +16,18 @@ function App() {
   const [name, setName] = useState("");
 
   const [todoItems, setTodoItems] = useState<TodoItem[]>(getDummyData());
+  // View > Complete Todo メニューのトグル状態。初期値は非表示。
+  const [showCompleted, setShowCompleted] = useState(false);
+
+  // Rust側のメニュークリックを購読し、クリックのたびに表示/非表示を反転する。
+  useEffect(() => {
+    const unlisten = listen("menu://toggle-complete-todo", () => {
+      setShowCompleted((prev) => !prev);
+    });
+    return () => {
+      unlisten.then((fn) => fn());
+    };
+  }, []);
 
   async function greet() {
     // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -183,7 +196,9 @@ function App() {
     return (
       <main className="container">
         <ul id="todo-list">
-          {displayItems.map((todo, index) => (
+          {displayItems
+          .filter((todo) => showCompleted || todo.completedAt === null)
+          .map((todo, index) => (
             <li
               key={todo.id}
               className="flex items-center gap-3 w-full p-2 px-3 bg-white border-b border-gray-200"
