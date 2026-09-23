@@ -13,7 +13,7 @@
     "windows": [
       {
         "title": "mytodo",
-        "width": 800,
+        "width": 400,
         "height": 600,
         "dragDropEnabled": false
       }

@@ -1,23 +1,38 @@
 import { useEffect, useMemo, useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 // import "./TodoList.css";
 import "./component/TodoList/style.css";
-import { getDummyData } from "./component/TodoList/stub";
 import { EmojiButton } from "./component/TodoList/EmojiButton";
 import { TodoFormDialog } from "./component/TodoList/TodoFormDialog";
 import type { TodoFormInput } from "./component/TodoList/TodoFormDialog";
+import { toBackendInput, toTodoItem } from "./component/TodoList/convert";
+import { addTodo, deleteTodo, listTodos, reorderTodos, updateTodo } from "./lib/ipc";
 
 // 追加ダイアログか、対象idを持つ編集ダイアログか。未表示の場合はnull。
-type DialogState = { mode: "add" } | { mode: "edit"; id: number } | null;
+type DialogState = { mode: "add" } | { mode: "edit"; id: string } | null;
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
-
-  const [todoItems, setTodoItems] = useState<TodoItem[]>(getDummyData());
+  const [todoItems, setTodoItems] = useState<TodoItem[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   // View > Complete Todo メニューのトグル状態。初期値は非表示。
   const [showCompleted, setShowCompleted] = useState(false);
+
+  // バックエンドから未完了・完了の両方を取得し、フロント用の形式に変換して保持する。
+  const loadTodos = async () => {
+    try {
+      const [active, done] = await Promise.all([
+        listTodos(false),
+        listTodos(true),
+      ]);
+      setTodoItems([...active, ...done].map(toTodoItem));
+    } catch (e) {
+      setErrorMessage(e instanceof Error ? e.message : String(e));
+    }
+  };
+
+  useEffect(() => {
+    loadTodos();
+  }, []);
 
   // Rust側のメニュークリックを購読し、クリックのたびに表示/非表示を反転する。
   useEffect(() => {
@@ -29,10 +44,15 @@ function App() {
     };
   }, []);
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
+  // バックエンド側でのデータ変更（追加・更新・削除・並べ替え・期限切れ削除）を都度反映する。
+  useEffect(() => {
+    const unlisten = listen("todos://changed", () => {
+      loadTodos();
+    });
+    return () => {
+      unlisten.then((fn) => fn());
+    };
+  }, []);
 
   // １行分の情報をドラッグするのでdraggableはliタグに対して設定する必要がある。
   // ただしドラック開始はノブをクリックしたときに限定したいので、ノブのクリック時にドラッグを許可する。
@@ -44,13 +64,19 @@ function App() {
   // =====================================================================================
   // リスト並べ替え関連
   // =====================================================================================
-  // fromの要素をtoの位置へ移動した新しい配列を返す（todoItems自体は変更しない）。
-  const reorder = (from: number, to: number) => {
-    const updated = [...todoItems];
+  // fromの要素をtoの位置へ移動した新しい配列を返す（引数の配列自体は変更しない）。
+  const reorderList = (list: TodoItem[], from: number, to: number) => {
+    const updated = [...list];
     const [draggedItem] = updated.splice(from, 1);
     updated.splice(to, 0, draggedItem);
     return updated;
   };
+
+  // 現在の表示対象（showCompletedに応じたフィルタ後）の一覧。ドラッグの添字はこの配列基準。
+  const visibleItems = useMemo(
+    () => todoItems.filter((item) => showCompleted || item.completedAt === null),
+    [todoItems, showCompleted]
+  );
 
   // ドラッグ中の見た目だけの並び替え。実データはドロップ時まで確定しない。
   const displayItems = useMemo(() => {
@@ -59,10 +85,10 @@ function App() {
       dragDestIndex === null ||
       dragSrcIndex === dragDestIndex
     ) {
-      return todoItems;
+      return visibleItems;
     }
-    return reorder(dragSrcIndex, dragDestIndex);
-  }, [todoItems, dragSrcIndex, dragDestIndex]);
+    return reorderList(visibleItems, dragSrcIndex, dragDestIndex);
+  }, [visibleItems, dragSrcIndex, dragDestIndex]);
 
   // ドラッグ関連のstateを一括で初期状態に戻す（確定・キャンセルどちらの後始末にも使う）。
   const resetDragState = () => {
@@ -85,7 +111,7 @@ function App() {
   };
 
   // ドラッグ開始位置を記録する。この時点ではtodoItemsは一切変更しない。
-  const handleDragStart = (event: React.DragEvent, index: number) => {
+  const handleDragStart = (_event: React.DragEvent, index: number) => {
     setDragSrcIndex(index);
   };
   // ホバー位置を更新するだけ（見た目はdisplayItemsのプレビューに反映）。preventDefaultはドロップ発火に必須。
@@ -99,8 +125,8 @@ function App() {
 
     setDragDestIndex(targetIndex);
   };
-  // 並び順を確定する唯一の箇所。ここでtodoItemsを更新し、orderを振り直す。
-  const handleDrop = (event: React.DragEvent, targetIndex: number) => {
+  // 並び順を確定する唯一の箇所。完了/未完了それぞれのグループ単位でバックエンドへ反映する。
+  const handleDrop = async (event: React.DragEvent, targetIndex: number) => {
     event.preventDefault();
 
     if (dragSrcIndex === null || dragSrcIndex === targetIndex) {
@@ -108,14 +134,29 @@ function App() {
       return;
     }
 
-    const updated = reorder(dragSrcIndex, targetIndex).map((item, index) => ({
-      ...item,
-      order: index + 1,
-    }));
-    setTodoItems(updated);
+    const reordered = reorderList(visibleItems, dragSrcIndex, targetIndex);
     resetDragState();
+
+    const activeIds = reordered
+      .filter((item) => item.completedAt === null)
+      .map((item) => item.id);
+    const doneIds = reordered
+      .filter((item) => item.completedAt !== null)
+      .map((item) => item.id);
+
+    try {
+      if (activeIds.length > 0) {
+        await reorderTodos(false, activeIds);
+      }
+      if (doneIds.length > 0) {
+        await reorderTodos(true, doneIds);
+      }
+      await loadTodos();
+    } catch (e) {
+      setErrorMessage(e instanceof Error ? e.message : String(e));
+    }
   };
-  const handleDragEnd = (event: React.DragEvent, index: number) => {
+  const handleDragEnd = (_event: React.DragEvent, _index: number) => {
     // onDropが発火しなかった場合（画面外へのドロップ等）はtodoItemsが未変更のため元の順序に戻る。
     resetDragState();
   };
@@ -130,23 +171,36 @@ function App() {
       ? todoItems.find((item) => item.id === dialog.id) ?? null
       : null;
 
-  const handleDeleteClick = (id: number) => {
-    // if (!window.confirm("このTodoを削除しますか？")) {
-    //   return;
-    // }
-    setTodoItems(todoItems.filter((item) => item.id !== id));
-    setDialog(null);
+  const handleDeleteClick = async (id: string) => {
+    if (!window.confirm("このTodoを削除しますか？")) {
+      return;
+    }
+    try {
+      await deleteTodo(id);
+      setDialog(null);
+      await loadTodos();
+    } catch (e) {
+      setErrorMessage(e instanceof Error ? e.message : String(e));
+    }
   };
-  const handleDoneClick = (id: number) => {
-    setTodoItems(
-      todoItems.map((item) =>
-        item.id === id
-          ? { ...item, completedAt: item.completedAt === null ? Date.now() : null }
-          : item
-      )
-    );
+  const handleDoneClick = async (id: string) => {
+    const target = todoItems.find((item) => item.id === id);
+    if (!target) {
+      return;
+    }
+    try {
+      await updateTodo(id, {
+        todo: target.todo,
+        importance: target.importance,
+        limitDate: target.limitDate,
+        isDone: target.completedAt === null,
+      });
+      await loadTodos();
+    } catch (e) {
+      setErrorMessage(e instanceof Error ? e.message : String(e));
+    }
   };
-  const handleEditClick = (id: number) => {
+  const handleEditClick = (id: string) => {
     setDialog({ mode: "edit", id });
   };
   const handleAddClick = () => {
@@ -155,38 +209,18 @@ function App() {
   const handleDialogCancel = () => {
     setDialog(null);
   };
-  const handleDialogSubmit = (input: TodoFormInput) => {
-    if (dialog?.mode === "edit") {
-      const targetId = dialog.id;
-      setTodoItems(
-        todoItems.map((item) =>
-          item.id === targetId
-            ? {
-                ...item,
-                todo: input.todo,
-                importance: input.importance,
-                limitDate: input.limitDate,
-                completedAt: input.isDone ? item.completedAt ?? Date.now() : null,
-                modifiedAt: Date.now(),
-              }
-            : item
-        )
-      );
-    } else {
-      const newItem: TodoItem = {
-        id: Date.now(),
-        todo: input.todo,
-        importance: input.importance,
-        memo: "",
-        limitDate: input.limitDate,
-        order: todoItems.length + 1,
-        completedAt: input.isDone ? Date.now() : null,
-        createdAt: Date.now(),
-        modifiedAt: Date.now(),
-      };
-      setTodoItems([...todoItems, newItem]);
+  const handleDialogSubmit = async (input: TodoFormInput) => {
+    try {
+      if (dialog?.mode === "edit") {
+        await updateTodo(dialog.id, toBackendInput(input));
+      } else {
+        await addTodo(toBackendInput(input));
+      }
+      setDialog(null);
+      await loadTodos();
+    } catch (e) {
+      setErrorMessage(e instanceof Error ? e.message : String(e));
     }
-    setDialog(null);
   };
 
   // =====================================================================================
@@ -195,10 +229,14 @@ function App() {
   const getMainContents = (): React.JSX.Element => {
     return (
       <main className="container">
+        {errorMessage && (
+          <p className="bg-rose-100 text-rose-700 text-sm p-2 text-left">
+            {errorMessage}
+          </p>
+        )}
         <ul id="todo-list">
-          {displayItems
-          .filter((todo) => showCompleted || todo.completedAt === null)
-          .map((todo, index) => (
+          {displayItems.map((todo, index) => (
+
             <li
               key={todo.id}
               className="flex items-center gap-3 w-full p-2 px-3 bg-white border-b border-gray-200"
